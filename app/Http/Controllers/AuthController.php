@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -19,20 +18,21 @@ class AuthController extends Controller
     public function authenticate(Request $request)
     {
         $request->validate([
-            'email'    => 'required',
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = Auth::user();
 
-        Auth::login($user);
-        if ($user->id_role == 1) {
-            return redirect()->route('admin.dashboard')->with('success', 'Login berhasil!');
-        } elseif ($user->id_role == 2) {
-            return redirect()->route('home')->with('success', 'Login berhasil!');
+            if ($user->id_role == 1) {
+                return redirect()->route('admin.dashboard')->with('success', 'Login berhasil!');
+            } elseif ($user->id_role == 2) {
+                return redirect()->route('home')->with('success', 'Login berhasil!');
+            }
         }
 
-        return back()->with('error', 'Kredensial yang diberikan tidak cocok dengan catatan kami!');
+        return back()->with('error', 'The credentials provided do not match our records!');
     }
 
     public function logout(Request $request)

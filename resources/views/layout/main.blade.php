@@ -5,9 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title }}</title>
-    <link rel="shortcut icon" type="image/png" href="{{ asset('../assets/images/logos/favicon.png') }}" />
-    <link rel="stylesheet" href="{{ asset('../assets/css/styles.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('../assets/css/custom.css') }}" />
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/logos/favicon.png') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/styles.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 
 <body>
@@ -17,7 +21,7 @@
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a href="./index.html" class="text-nowrap logo-img">
-                        <img src="{{ asset('../assets/images/logos/dark-logo.svg') }}" width="180" alt="" />
+                        <img src="{{ asset('assets/images/logos/dark-logo.svg') }}" width="180" alt="" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
@@ -92,18 +96,18 @@
         </aside>
 
         <div class="body-wrapper">
-            <header class="app-header">
+            <header class="app-header navmenu">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item d-block d-xl-none">
                             <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="#">
-                                <i class="ti ti-menu-2"></i>
+                                <i class="ti ti-menu-2 text-white"></i>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-icon-hover" href="#">
-                                <i class="ti ti-bell-ringing"></i>
-                                <div class="notification bg-primary rounded-circle"></div>
+                                <i class="fa-solid fa-bell text-white"></i>
+                                <div class="notification bg-light rounded-circle"></div>
                             </a>
                         </li>
                     </ul>
@@ -153,6 +157,18 @@
     <script src="{{ asset('../assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
     <script src="{{ asset('../assets/libs/simplebar/dist/simplebar.js') }}"></script>
     <script src="{{ asset('../assets/js/dashboard.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        </script>
+    @endif
 </body>
 
 </html>
