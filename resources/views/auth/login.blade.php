@@ -25,7 +25,7 @@
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email</label>
                                         <input type="text" class="form-control" id="email" name="email"
-                                            value="{{ old('email') }}">
+                                            value="{{ old('email') }}" autofocus>
                                         @error('email')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror

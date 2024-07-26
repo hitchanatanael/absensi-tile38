@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container-fluid">
-        <div class="pagetitle pb-3">
+        <div class="pagetitle headnav">
             <h2>Data Dosen</h2>
             <nav>
                 <ol class="breadcrumb">
@@ -14,21 +14,20 @@
 
         <div class="row">
             <div class="col-xl-12 col-lg-12">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Data</h6>
-                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDosenModal"><i
-                                class="ti ti-plus me-2"></i>Tambah Data</a>
-                    </div>
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDosenModal"><i
+                            class="ti ti-plus me-2"></i>Tambah Data</a>
+                </div>
 
-                    <div class="card">
-                        <div class="card-body">
-                            @if (session('success'))
-                                <div class="alert alert-success">{{ session('success') }}</div>
-                            @endif
-                            @if (session('error'))
-                                <div class="alert alert-danger">{{ session('error') }}</div>
-                            @endif
+                <div class="card">
+                    <div class="card-body">
+                        @if (session('success'))
+                            <div class="alert alert-success">{{ session('success') }}</div>
+                        @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger">{{ session('error') }}</div>
+                        @endif
+                        <div class="table-responsive">
                             <table class="table table-bordered">
                                 <tr>
                                     <th class="text-center" style="width: 10px;">No.</th>
@@ -40,7 +39,7 @@
                                 </tr>
                                 @forelse($dosens as $dosen)
                                     <tr>
-                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td class="text-center">{{ $loop->iteration }}.</td>
                                         <td>{{ $dosen->nama }}</td>
                                         <td>{{ $dosen->nik }}</td>
                                         <td>{{ $dosen->alamat }}</td>

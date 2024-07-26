@@ -34,9 +34,14 @@ class HomeController extends Controller
             ->whereDate('tgl_absen', now()->toDateString())
             ->get();
 
+        $isClockedIn = $absensiHariIni->isNotEmpty() && $absensiHariIni->first()->status == 1;
+        $isClockedOut = $absensiHariIni->isNotEmpty() && $absensiHariIni->first()->status == 0;
+
         $data = [
             'title' => 'Home',
             'absensiHariIni' => $absensiHariIni,
+            'isClockedIn' => $isClockedIn,
+            'isClockedOut' => $isClockedOut,
         ];
 
         return view('user.home', $data);
@@ -52,22 +57,22 @@ class HomeController extends Controller
             }
 
             $geoJson = '{
-            "type" : "Polygon",
-            "coordinates" : [
-                [
-                    [101.3629689712017, 0.46937355787708773],
-                    [101.36295220739564, 0.46947011415901285],
-                    [101.36297098285843, 0.46951839229948555],
-                    [101.3630427319483, 0.46955057772626807],
-                    [101.36313727981437, 0.4695324734237228],
-                    [101.36315069085921, 0.46947883104552296],
-                    [101.36316141969506, 0.4694332350237229],
-                    [101.36313258594868, 0.46935210092537777],
-                    [101.36299713439585, 0.46932527973563537],
-                    [101.3629689712017, 0.46937355787708773]
+                "type" : "Polygon",
+                "coordinates" : [
+                    [
+                        [ 101.3858240257524, 0.46995761521579044],
+                        [101.38593064355403, 0.4699737079282085],
+                        [ 101.38603659080346, 0.46991268972682326],
+                        [ 101.38604463742999, 0.46977858378783105],
+                        [ 101.38593399631509, 0.46974840995120126],
+                        [ 101.38585151839307, 0.46976517319379313],
+                        [ 101.385800556425, 0.46979668808975295],
+                        [ 101.385800556425, 0.46979668808975295],
+                        [ 101.38583274293114, 0.46994152250335974],
+                        [ 101.3858240257524, 0.46995761521579044]
+                    ]
                 ]
-            ]
-        }';
+            }';
 
             $geoJsonString = json_encode(json_decode($geoJson, true));
 
@@ -78,11 +83,13 @@ class HomeController extends Controller
             $intersectsCommand = ['INTERSECTS', 'geofence', 'POINT', $latitude, $longitude];
             $intersectsResponse = $this->tile38->executeRaw($intersectsCommand);
             Log::info('Tile38 response', ['intersectsResponse' => $intersectsResponse]);
+            Log::info('Lat : ' . $latitude);
+            Log::info('Long : ' . $longitude);
 
             if (isset($intersectsResponse[1]) && is_array($intersectsResponse[1]) && count($intersectsResponse[1]) > 0) {
                 foreach ($intersectsResponse[1] as $result) {
                     if ($result[0] === 'mygeofence') {
-                        return ['status' => 'success', 'isWithin' => true];
+                        return ['status' => 'success', 'isIntersects' => true];
                     }
                 }
             }
@@ -104,19 +111,22 @@ class HomeController extends Controller
 
         $geofenceCheck = $this->checkGeofence($latitude, $longitude);
 
-        if ($geofenceCheck['status'] === 'success' && $geofenceCheck['isWithin']) {
+        if ($geofenceCheck['status'] === 'success' && $geofenceCheck['isIntersects']) {
             try {
+                $isLate = now()->greaterThan(now()->setTime(9, 0));
+
                 Absensi::create([
                     'id_user' => $user->id,
                     'tgl_absen' => $currentDate,
                     'jam_masuk' => $currentTime,
-                    // 'koor_masuk' => json_encode(['latitude' => $latitude, 'longitude' => $longitude]),
-                    'koor_masuk' => $latitude . ',' . $longitude,
+                    // 'koor_masuk' => $latitude . ',' . $longitude,
+                    'koor_masuk' => json_encode(['lat' => $latitude, 'lng' => $longitude]),
                     'status' => 1,
+                    'is_late' => $isLate,
                 ]);
 
                 Log::info('Absensi berhasil', ['user_id' => $user->id, 'date' => $currentDate, 'time' => $currentTime]);
-                return back()->with('success', 'Absensi berhasil');
+                return back()->with('success', 'Anda berhasil melakukan absensi');
             } catch (\Exception $e) {
                 Log::error('Absensi gagal', ['error' => $e->getMessage()]);
                 return back()->with('error', 'Absensi gagal, Silahkan coba lagi');
@@ -124,8 +134,9 @@ class HomeController extends Controller
         }
 
         Log::info('User is outside the geofence.');
-        return back()->with('error', $geofenceCheck['message']);
+        return back()->with('error', 'Anda belum memasuki area absensi');
     }
+
 
     public function clockOut(Request $request)
     {
@@ -136,7 +147,7 @@ class HomeController extends Controller
 
         $geofenceCheck = $this->checkGeofence($latitude, $longitude);
 
-        if ($geofenceCheck['status'] === 'success' && $geofenceCheck['isWithin']) {
+        if ($geofenceCheck['status'] === 'success' && $geofenceCheck['isIntersects']) {
             try {
                 $absensi = Absensi::where('id_user', $user->id)
                     ->whereDate('tgl_absen', now()->toDateString())
@@ -145,7 +156,8 @@ class HomeController extends Controller
                 if ($absensi && $absensi->status == 1) {
                     $absensi->update([
                         'jam_keluar' => $currentTime,
-                        'koor_keluar' => $latitude . ',' . $longitude,
+                        // 'koor_keluar' => $latitude . ',' . $longitude,
+                        'koor_keluar' => json_encode(['lat' => $latitude, 'lng' => $longitude]),
                         'status' => 0
                     ]);
 
@@ -160,6 +172,6 @@ class HomeController extends Controller
         }
 
         Log::info('User is outside the geofence.');
-        return back()->with('error', $geofenceCheck['message']);
+        return back()->with('error', 'Anda belum memasuki area absensi');
     }
 }

@@ -11,6 +11,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 </head>
 
@@ -96,23 +100,18 @@
         </aside>
 
         <div class="body-wrapper">
-            <header class="app-header navmenu">
+            <header class="app-header {{ Auth::user()->id_role == 1 ? '' : 'navmenu' }}">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
-                        <li class="nav-item d-block d-xl-none">
-                            <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="#">
-                                <i class="ti ti-menu-2 text-white"></i>
-                            </a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link nav-icon-hover" href="#">
-                                <i class="fa-solid fa-bell text-white"></i>
-                                <div class="notification bg-light rounded-circle"></div>
+                                <i class="fa-solid fa-bell {{ Auth::user()->id_role == 1 ? '' : 'bell-user' }}"></i>
+                                <div class="notification rounded-circle"></div>
                             </a>
                         </li>
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-                        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                        <ul class="d-flex align-items-center justify-content-end">
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="#" id="drop2"
                                     data-bs-toggle="dropdown" aria-expanded="false">
@@ -127,9 +126,10 @@
                                             <p class="mb-0 fs-3">My Profile</p>
                                         </a>
 
-                                        <form action="{{ route('logout') }}" method="POST">
+                                        <form action="{{ route('logout') }}" method="POST"
+                                            class="d-flex justify-content-center align-items-center">
                                             @csrf
-                                            <button class="btn btn-danger mx-3 mt-2 d-block">
+                                            <button class="btn btn-danger px-4">
                                                 <i class="ti ti-logout"></i> Logout
                                             </button>
                                         </form>
@@ -145,10 +145,36 @@
             @yield('content')
 
             <div class="py-6 px-6 text-center">
-                <p class="mb-0 fs-4">Lean Studio</p>
+                <a href="https://adminmart.com/product/modernize-free-bootstrap-5-admin-template/"><b>Modernize</b></a>
+                &copy; <strong><span>Lean</span></strong>
             </div>
 
+            <nav class="bottom-nav">
+                @if (Auth::user()->id_role === 1)
+                    <a href="{{ route('admin.dashboard') }}"
+                        class="{{ Request::routeIs('admin.dashboard') ? 'active' : '' }}">
+                        <i class="ti ti-layout-dashboard"></i></i><br>Dashboard
+                    </a>
+                    <a href="{{ route('absensi.dosen') }}"
+                        class="{{ Request::routeIs('absensi.dosen') ? 'active' : '' }}">
+                        <i class="fa fa-calendar"></i><br>Absensi
+                    </a>
+                    <a href="{{ route('data.dosen') }}"
+                        class="{{ Request::routeIs('data.dosen') ? 'active' : '' }}">
+                        <i class="fa fa-user"></i><br>Data
+                    </a>
+                    <a href="{{ route('akun.user') }}" class="{{ Request::routeIs('akun.user') ? 'active' : '' }}">
+                        <i class="fa fa-users"></i><br>Akun
+                    </a>
+                @elseif(Auth::user()->id_role === 2)
+                    <a href="{{ route('home') }}" class="{{ Request::routeIs('home') ? 'active' : '' }}">
+                        <i class="fa fa-home"></i><br>Home
+                    </a>
+                @endif
+            </nav>
         </div>
+
+    </div>
     </div>
     <script src="{{ asset('../assets/libs/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>

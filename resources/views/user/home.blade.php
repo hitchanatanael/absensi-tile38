@@ -1,5 +1,7 @@
 @extends('layout.main')
-
+@php
+    use Carbon\Carbon;
+@endphp
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -12,7 +14,7 @@
                         {{ now()->format('H:i') }}
                     </p>
                     <p class="text-white">
-                        {{ now()->format('l, d F Y') }}
+                        {{ Carbon::now()->locale('id')->translatedFormat('l, d F Y') }}
                     </p>
                 </div>
             </div>
@@ -24,13 +26,11 @@
                         <div class="row pt-4 mb-4">
                             <div class="col">
                                 <label for="startTime" class="form-label text-black">Start Time</label>
-                                <input type="text" class="form-control" id="startTime"
-                                    value="{{ $absensiHariIni->first()->jam_masuk ?? '09:00' }}" readonly>
+                                <input type="text" class="form-control" id="startTime" value="09:00" readonly>
                             </div>
                             <div class="col">
                                 <label for="endTime" class="form-label text-black">End Time</label>
-                                <input type="text" class="form-control" id="endTime"
-                                    value="{{ $absensiHariIni->first()->jam_keluar ?? '17:00' }}" readonly>
+                                <input type="text" class="form-control" id="endTime" value="17:00" readonly>
                             </div>
                         </div>
                         @if ($absensiHariIni->isNotEmpty() && $absensiHariIni->first()->status == 1)
@@ -56,15 +56,34 @@
         <div>
             <div class="container-fluid bg-white pt-2">
                 <div>
-                    <h4 class="font-semibold text-dark">Recent attendance</h4>
+                    <h5 class="font-semibold text-dark">
+                        <i class="fa-solid fa-street-view me-2"></i>Attendance History
+                    </h5>
                     <div class="mt-2">
                         <table class="table">
                             <tbody>
                                 @foreach ($absensiHariIni as $absensi)
                                     <tr>
-                                        <td>{{ $absensi->tgl_absen }}</td>
-                                        <td>{{ $absensi->jam_masuk }}</td>
-                                        <td>{{ $absensi->jam_keluar }}</td>
+                                        <td>
+                                            <span class="fw-bold" style="width: 600px">
+                                                {{ Carbon::parse($absensi->tgl_absen)->translatedFormat('l, d M Y') }}
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span class="fw-bold {{ $absensi->is_late == 1 ? 'text-danger' : '' }}"
+                                                style="width: 200px">
+                                                <i class="fa-solid fa-clock me-1"></i>
+                                                {{ $absensi->jam_masuk ? Carbon::parse($absensi->jam_masuk)->format('H:i') : '' }}
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span class="fw-bold" style="width: 200px">
+                                                <i class="fa-solid fa-clock me-1"></i>
+                                                {{ $absensi->jam_keluar ? Carbon::parse($absensi->jam_keluar)->format('H:i') : '' }}
+                                            </span>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -75,7 +94,6 @@
         </div>
     </div>
 
-    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
     <script>
         // Get current location
         function getLocation() {
@@ -110,5 +128,23 @@
 
         // Call getLocation on page load
         window.onload = getLocation;
+        // Show SweetAlert based on session messages
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: '{{ session('success') }}',
+                });
+            @endif
+
+            @if (session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: '{{ session('error') }}',
+                });
+            @endif
+        });
     </script>
 @endsection

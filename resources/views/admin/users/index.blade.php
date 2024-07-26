@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container-fluid">
-        <div class="pagetitle pb-3">
+        <div class="pagetitle headnav">
             <h2>Data User</h2>
             <nav>
                 <ol class="breadcrumb">
@@ -14,24 +14,23 @@
 
         <div class="row">
             <div class="col-xl-12 col-lg-12">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Data</h6>
-                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal"><i
-                                class="ti ti-plus me-2"></i>Tambah Data</a>
-                    </div>
+                <div class="py-3 d-flex flex-row align-items-center justify-content-between">
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal"><i
+                            class="ti ti-plus me-2"></i>Tambah Data</a>
+                </div>
 
-                    <div class="card">
-                        <div class="card-body">
-                            @if (session('success'))
-                                <div class="alert alert-success">{{ session('success') }}</div>
-                            @endif
-                            @if (session('error'))
-                                <div class="alert alert-danger">{{ session('error') }}</div>
-                            @endif
+                <div class="card">
+                    <div class="card-body">
+                        @if (session('success'))
+                            <div class="alert alert-success">{{ session('success') }}</div>
+                        @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger">{{ session('error') }}</div>
+                        @endif
+                        <div class="table-responsive">
                             <table class="table table-bordered">
                                 <tr>
-                                    <th class="text-center" style="width: 10px;">No.</th>
+                                    <th class="text-center" style="width: 10px">No.</th>
                                     <th class="text-center">Nama Dosen</th>
                                     <th class="text-center">Role</th>
                                     <th class="text-center">Email</th>
@@ -39,19 +38,26 @@
                                 </tr>
                                 @forelse($users as $user)
                                     <tr>
-                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td class="text-center">{{ $loop->iteration }}.</td>
                                         <td>{{ $user->nama }}</td>
                                         <td>{{ $user->id_role == 1 ? 'Admin' : 'User' }}</td>
                                         <td>{{ $user->email }}</td>
+
                                         <td class="text-center">
-                                            <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                                                data-bs-target="#editUserModal{{ $user->id }}">Edit</a>
-                                            <form action="{{ route('akun.user.destroy', $user->id) }}" method="POST"
-                                                class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                                            </form>
+                                            <div class="d-flex gap-1 d-md-block">
+                                                <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                                    data-bs-target="#editUserModal{{ $user->id }}">
+                                                    <i class="ti ti-pencil"></i>
+                                                </a>
+                                                <form action="{{ route('akun.user.destroy', $user->id) }}" method="POST"
+                                                    class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="ti ti-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
 
@@ -130,7 +136,9 @@
                                     </div>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">Tidak ada data.</td>
+                                        <td colspan="5" class="text-center" style="font-size: 13px">Tidak ada
+                                            data.
+                                        </td>
                                     </tr>
                                 @endforelse
                             </table>

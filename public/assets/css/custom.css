@@ -1,3 +1,8 @@
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
 .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -26,11 +31,6 @@
 .bottom-nav .nav-link .fa {
     display: block;
     font-size: 1.25rem;
-}
-
-body {
-    margin: 0px;
-    padding: 0px;
 }
 
 .blue-box {
@@ -71,4 +71,56 @@ body {
 
 .title-abs {
     margin-top: 60px;
+}
+
+#map {
+    height: 300px;
+}
+
+#mapAttend {
+    height: 300px;
+}
+
+/* custom.css */
+
+.bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    z-index: 1000;
+    justify-content: space-around;
+    padding: 10px 0;
+}
+
+.bottom-nav a {
+    text-align: center;
+    flex-grow: 1;
+    color: #333;
+    text-decoration: none;
+}
+
+.bottom-nav a.active {
+    color: #007bff;
+}
+
+@media (max-width: 768px) {
+    .sidebar-nav {
+        display: none;
+    }
+
+    .bottom-nav {
+        display: flex;
+    }
+
+    .body-wrapper {
+        padding-bottom: 60px;
+    }
+}
+
+.bell-user {
+    color: #fff;
 }

@@ -18,4 +18,9 @@ class User extends AuthenticatableUser implements AuthenticatableContract
     {
         return $this->belongsTo(Role::class, 'id_role');
     }
+
+    public function absensi()
+    {
+        return $this->hasMany(User::class, 'id_user');
+    }
 }
