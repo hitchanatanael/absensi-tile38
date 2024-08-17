@@ -52,7 +52,7 @@
                                                 <form action="{{ route('akun.user.destroy', $user->id) }}" method="POST"
                                                     class="d-inline">
                                                     @csrf
-                                                    @method('DELETE')
+                                                    @method('POST')
                                                     <button type="submit" class="btn btn-danger btn-sm">
                                                         <i class="ti ti-trash"></i>
                                                     </button>

@@ -4,9 +4,11 @@ use App\Http\Controllers\AbsenDosenController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\IzinController;
+use App\Http\Controllers\IzinDosenController;
+use App\Http\Controllers\KehadiranDosenController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthController::class, 'index'])->name('login');
@@ -20,7 +22,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 // Admin Absensi Dosen
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/absensi/dosen', [AbsenDosenController::class, 'index'])->name('absensi.dosen');
+    Route::get('/kehadiran/dosen', [KehadiranDosenController::class, 'index'])->name('kehadiran.dosen');
+    Route::post('/kehadiran/dosen/{id}', [KehadiranDosenController::class, 'destroy'])->name('kehadiran.dosen.destroy');
+});
+
+// Admin Izin Dosen
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/izin/dosen', [IzinDosenController::class, 'index'])->name('izin.dosen');
+    Route::get('/izin/dosen/setuju/{id}', [IzinDosenController::class, 'setuju'])->name('izin.setuju');
+    Route::get('/izin/dosen/tolak/{id}', [IzinDosenController::class, 'tolak'])->name('izin.tolak');
 });
 
 //Admin Data Dosen
@@ -28,7 +38,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/data/dosen', [DosenController::class, 'index'])->name('data.dosen');
     Route::post('/data/dosen/store', [DosenController::class, 'store'])->name('data.dosen.store');
     Route::put('/data-dosen/{id}', [DosenController::class, 'update'])->name('data.dosen.update');
-    Route::post('/data/dosen', [DosenController::class, 'destroy'])->name('data.dosen.destroy');
+    Route::post('/data/dosen/{id}', [DosenController::class, 'destroy'])->name('data.dosen.destroy');
 });
 
 // Admin Akun User
@@ -36,26 +46,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/akun/user', [UserController::class, 'index'])->name('akun.user');
     Route::post('/akun/user/store', [UserController::class, 'store'])->name('akun.user.store');
     Route::put('/akun/user/{id}', [UserController::class, 'update'])->name('akun.user.update');
-    Route::post('/akun/user', [UserController::class, 'destroy'])->name('akun.user.destroy');
+    Route::post('/akun/user/{id}', [UserController::class, 'destroy'])->name('akun.user.destroy');
 });
 
-// Route User
+// User
 Route::middleware(['auth'])->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::post('/home/clockIn', [HomeController::class, 'clockIn'])->name('absensi.clock-in');
-    Route::post('/home/clockOut', [HomeController::class, 'clockOut'])->name('absensi.clock-out');
-});
-
-// cek koneksi redis tile38
-Route::get('/test-redis', function () {
-    try {
-        $pingResponse = Redis::connection('tile38')->ping();
-        if ($pingResponse === 'PONG') {
-            return "Koneksi ke Tile38 berhasil.";
-        } else {
-            return "Tidak bisa terhubung ke Tile38.";
-        }
-    } catch (Exception $e) {
-        return "Error: " . $e->getMessage();
-    }
+    Route::get('/home', [AbsensiController::class, 'index'])->name('home');
+    Route::post('/home/clockIn', [AbsensiController::class, 'clockIn'])->name('absensi.clock-in');
+    Route::post('/home/clockOut', [AbsensiController::class, 'clockOut'])->name('absensi.clock-out');
+    Route::get('/izin', [IzinController::class, 'index'])->name('izin');
+    Route::post('/izin', [IzinController::class, 'store'])->name('izin.store');
+    Route::post('/izin/{id}', [IzinController::class, 'destroy'])->name('izin.destroy');
 });

@@ -80,8 +80,10 @@
 
                                         <td>
                                             <span class="fw-bold" style="width: 200px">
-                                                <i class="fa-solid fa-clock me-1"></i>
-                                                {{ $absensi->jam_keluar ? Carbon::parse($absensi->jam_keluar)->format('H:i') : '' }}
+                                                @if ($absensi->jam_keluar)
+                                                    <i class="fa-solid fa-clock me-1"></i>
+                                                    {{ Carbon::parse($absensi->jam_keluar)->format('H:i') }}
+                                                @endif
                                             </span>
                                         </td>
                                     </tr>

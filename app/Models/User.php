@@ -23,4 +23,9 @@ class User extends AuthenticatableUser implements AuthenticatableContract
     {
         return $this->hasMany(User::class, 'id_user');
     }
+
+    public function izin()
+    {
+        return $this->hasMany(User::class, 'id_user');
+    }
 }

@@ -21,12 +21,6 @@
 
                 <div class="card">
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success">{{ session('success') }}</div>
-                        @endif
-                        @if (session('error'))
-                            <div class="alert alert-danger">{{ session('error') }}</div>
-                        @endif
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <tr>
@@ -44,14 +38,16 @@
                                         <td>{{ $dosen->nik }}</td>
                                         <td>{{ $dosen->alamat }}</td>
                                         <td>{{ $dosen->no_hp }}</td>
-                                        <td class="text-center">
+                                        <td class="text-center" style="width: 120px">
                                             <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                                                data-bs-target="#editDosenModal{{ $dosen->id }}">Edit</a>
+                                                data-bs-target="#editDosenModal{{ $dosen->id }}"><i
+                                                    class="fa-solid fa-pen-to-square"></i></a>
                                             <form action="{{ route('data.dosen.destroy', $dosen->id) }}" method="POST"
                                                 class="d-inline">
                                                 @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                                @method('POST')
+                                                <button type="submit" class="btn btn-danger btn-sm"><i
+                                                        class="fa-solid fa-trash"></i></button>
                                             </form>
                                         </td>
                                     </tr>

@@ -69,7 +69,13 @@
                                         </td>
 
                                         <td class="text-center" style="width: 120px; font-size: 14px">
-                                            <a href="#" class="btn btn-danger"><i class="ti ti-trash"></i></a>
+                                            <form action="{{ route('absensi.dosen.destroy', $absen->id) }}" method="POST">
+                                                @csrf
+                                                @method('POST')
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i class="ti ti-trash"></i>
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 </tbody>

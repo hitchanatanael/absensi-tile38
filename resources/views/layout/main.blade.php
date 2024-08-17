@@ -43,19 +43,29 @@
                                 <a class="sidebar-link {{ Request::routeIs('admin.dashboard') ? 'active' : '' }}"
                                     href="{{ route('admin.dashboard') }}" aria-expanded="false">
                                     <span>
-                                        <i class="ti ti-layout-dashboard"></i>
+                                        <i class="fa-solid fa-gauge-high"></i>
                                     </span>
                                     <span class="hide-menu">Dashboard</span>
                                 </a>
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link {{ Request::routeIs('absensi.dosen') ? 'active' : '' }}"
-                                    href="{{ route('absensi.dosen') }}" aria-expanded="false">
+                                <a class="sidebar-link {{ Request::routeIs('kehadiran.dosen') ? 'active' : '' }}"
+                                    href="{{ route('kehadiran.dosen') }}" aria-expanded="false">
                                     <span>
-                                        <i class="ti ti-calendar"></i>
+                                        <i class="fa-solid fa-id-card-clip"></i>
                                     </span>
-                                    <span class="hide-menu">Absensi Dosen</span>
+                                    <span class="hide-menu">Kehadiran Dosen</span>
+                                </a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a class="sidebar-link {{ Request::routeIs('izin.dosen') ? 'active' : '' }}"
+                                    href="{{ route('izin.dosen') }}" aria-expanded="false">
+                                    <span>
+                                        <i class="fa-solid fa-envelope-open-text"></i>
+                                    </span>
+                                    <span class="hide-menu">Izin Dosen</span>
                                 </a>
                             </li>
 
@@ -63,7 +73,7 @@
                                 <a class="sidebar-link {{ Request::routeIs('data.dosen') ? 'active' : '' }}"
                                     href="{{ route('data.dosen') }}" aria-expanded="false">
                                     <span>
-                                        <i class="ti ti-user"></i>
+                                        <i class="fa-solid fa-user"></i>
                                     </span>
                                     <span class="hide-menu">Data Dosen</span>
                                 </a>
@@ -73,7 +83,7 @@
                                 <a class="sidebar-link {{ Request::routeIs('akun.user') ? 'active' : '' }}"
                                     href="{{ route('akun.user') }}" aria-expanded="false">
                                     <span>
-                                        <i class="ti ti-user"></i>
+                                        <i class="fa-solid fa-users"></i>
                                     </span>
                                     <span class="hide-menu">Akun User</span>
                                 </a>
@@ -93,6 +103,16 @@
                                     <span class="hide-menu">Home</span>
                                 </a>
                             </li>
+
+                            <li class="sidebar-item">
+                                <a class="sidebar-link {{ Request::routeIs('izin') ? 'active' : '' }}"
+                                    href="{{ route('izin') }}" aria-expanded="false">
+                                    <span>
+                                        <i class="fa-solid fa-envelope-open-text"></i>
+                                    </span>
+                                    <span class="hide-menu">Izin</span>
+                                </a>
+                            </li>
                         @endif
                     </ul>
                 </nav>
@@ -100,12 +120,14 @@
         </aside>
 
         <div class="body-wrapper">
-            <header class="app-header {{ Auth::user()->id_role == 1 ? '' : 'navmenu' }}">
+            <header
+                class="app-header {{ Auth::user()->id_role == 1 ? '' : (Request::routeIs('home') ? 'navmenu' : '') }}">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link nav-icon-hover" href="#">
-                                <i class="fa-solid fa-bell {{ Auth::user()->id_role == 1 ? '' : 'bell-user' }}"></i>
+                                <i
+                                    class="fa-solid fa-bell {{ Auth::user()->id_role == 1 ? '' : (Request::routeIs('home') ? 'bell-user' : '') }}"></i>
                                 <div class="notification rounded-circle"></div>
                             </a>
                         </li>
@@ -153,16 +175,23 @@
                 @if (Auth::user()->id_role === 1)
                     <a href="{{ route('admin.dashboard') }}"
                         class="{{ Request::routeIs('admin.dashboard') ? 'active' : '' }}">
-                        <i class="ti ti-layout-dashboard"></i></i><br>Dashboard
+                        <i class="fa-solid fa-gauge-high"></i><br>Dashboard
                     </a>
-                    <a href="{{ route('absensi.dosen') }}"
-                        class="{{ Request::routeIs('absensi.dosen') ? 'active' : '' }}">
-                        <i class="fa fa-calendar"></i><br>Absensi
+
+                    <a href="{{ route('kehadiran.dosen') }}"
+                        class="{{ Request::routeIs('kehadiran.dosen') ? 'active' : '' }}">
+                        <i class="fa-solid fa-id-card-clip"></i><br>Kehadiran Dosen
                     </a>
+
+                    <a href="{{ route('izin.dosen') }}" class="{{ Request::routeIs('izin.doen') ? 'active' : '' }}">
+                        <i class="fa-solid fa-envelope-open-text"></i>Izin Dosen
+                    </a>
+
                     <a href="{{ route('data.dosen') }}"
                         class="{{ Request::routeIs('data.dosen') ? 'active' : '' }}">
-                        <i class="fa fa-user"></i><br>Data
+                        <i class="fa fa-user"></i><br>Data Dosen
                     </a>
+
                     <a href="{{ route('akun.user') }}" class="{{ Request::routeIs('akun.user') ? 'active' : '' }}">
                         <i class="fa fa-users"></i><br>Akun
                     </a>
@@ -170,20 +199,22 @@
                     <a href="{{ route('home') }}" class="{{ Request::routeIs('home') ? 'active' : '' }}">
                         <i class="fa fa-home"></i><br>Home
                     </a>
+
+                    <a href="{{ route('izin') }}" class="{{ Request::routeIs('izin') ? 'active' : '' }}">
+                        <i class="fa-solid fa-envelope-open-text"></i><br>Izin
+                    </a>
                 @endif
             </nav>
         </div>
-
     </div>
-    </div>
-    <script src="{{ asset('../assets/libs/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ asset('../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('../assets/js/sidebarmenu.js') }}"></script>
-    <script src="{{ asset('../assets/js/app.min.js') }}"></script>
-    <script src="{{ asset('../assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('../assets/libs/simplebar/dist/simplebar.js') }}"></script>
-    <script src="{{ asset('../assets/js/dashboard.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('../assets/js/app.min.js') }}"></script>
+    <script src="{{ asset('../assets/js/dashboard.js') }}"></script>
+    <script src="{{ asset('../assets/js/sidebarmenu.js') }}"></script>
+    <script src="{{ asset('../assets/libs/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('../assets/libs/simplebar/dist/simplebar.js') }}"></script>
+    <script src="{{ asset('../assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 
     @if (session('success'))
         <script>
