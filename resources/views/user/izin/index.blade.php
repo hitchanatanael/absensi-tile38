@@ -1,5 +1,7 @@
 @extends('layout.main')
-
+@php
+    use Carbon\Carbon;
+@endphp
 @section('content')
     <div class="container-fluid">
         <div class="pagetitle headnav">
@@ -33,9 +35,11 @@
                                 @forelse($izins as $izin)
                                     <tr>
                                         <td class="text-center">{{ $izin->jenis_izin }}</td>
-                                        <td class="text-center">{{ $izin->mulai_izin }} - {{ $izin->selesai_izin }}</td>
                                         <td class="text-center">
-                                            {{ \Carbon\Carbon::parse($izin->mulai_izin)->diffInDays(\Carbon\Carbon::parse($izin->selesai_izin)) + 1 }}
+                                            {{ Carbon::parse($izin->mulai_izin)->translatedFormat('l, d M Y') }} -
+                                            {{ Carbon::parse($izin->selesai_izin)->translatedFormat('l, d M Y') }}</td>
+                                        <td class="text-center">
+                                            {{ Carbon::parse($izin->mulai_izin)->diffInDays(Carbon::parse($izin->selesai_izin)) + 1 }}
                                             hari
                                         </td>
                                         <td class="text-center">

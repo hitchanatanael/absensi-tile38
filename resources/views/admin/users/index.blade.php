@@ -16,32 +16,24 @@
             <div class="col-xl-12 col-lg-12">
                 <div class="py-3 d-flex flex-row align-items-center justify-content-between">
                     <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal"><i
-                            class="ti ti-plus me-2"></i>Tambah Data</a>
+                            class="ti ti-plus me-2"></i>Tambah Akun</a>
                 </div>
 
                 <div class="card">
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success">{{ session('success') }}</div>
-                        @endif
-                        @if (session('error'))
-                            <div class="alert alert-danger">{{ session('error') }}</div>
-                        @endif
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <tr>
-                                    <th class="text-center" style="width: 10px">No.</th>
-                                    <th class="text-center">Nama Dosen</th>
-                                    <th class="text-center">Role</th>
                                     <th class="text-center">Email</th>
+                                    <th class="text-center">Role</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                                 @forelse($users as $user)
                                     <tr>
-                                        <td class="text-center">{{ $loop->iteration }}.</td>
-                                        <td>{{ $user->nama }}</td>
-                                        <td>{{ $user->id_role == 1 ? 'Admin' : 'User' }}</td>
-                                        <td>{{ $user->email }}</td>
+                                        <td class="text-center">{{ $user->email }}</td>
+                                        <td class="text-center">
+                                            <span class="badge text-bg-info">{{ $user->role_name }}</span>
+                                        </td>
 
                                         <td class="text-center">
                                             <div class="d-flex gap-1 d-md-block">
@@ -99,30 +91,11 @@
                                                             </select>
                                                         </div>
                                                         <div class="mb-3">
-                                                            <label for="id_role{{ $user->id }}"
-                                                                class="form-label">Role</label>
-                                                            <select class="form-control" id="id_role{{ $user->id }}"
-                                                                name="id_role" required>
-                                                                <option value="1"
-                                                                    {{ $user->id_role == 1 ? 'selected' : '' }}>Admin
-                                                                </option>
-                                                                <option value="2"
-                                                                    {{ $user->id_role == 2 ? 'selected' : '' }}>User
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="mb-3">
                                                             <label for="email{{ $user->id }}"
                                                                 class="form-label">Email</label>
                                                             <input type="email" class="form-control"
                                                                 id="email{{ $user->id }}" name="email"
                                                                 value="{{ $user->email }}" required>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="password{{ $user->id }}"
-                                                                class="form-label">Password</label>
-                                                            <input type="password" class="form-control"
-                                                                id="password{{ $user->id }}" name="password">
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -160,18 +133,10 @@
                 <form action="{{ route('akun.user.store') }}" method="POST">
                     @csrf
                     <div class="modal-body">
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
                         <div class="mb-3">
                             <label for="nama" class="form-label">Nama</label>
                             <select class="form-control" id="nama" name="nama" required>
+                                <option value="" selected>-Pilih Nama-</option>
                                 @foreach ($dosens as $dosen)
                                     <option value="{{ $dosen->nama }}">{{ $dosen->nama }}</option>
                                 @endforeach
@@ -179,10 +144,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="id_role" class="form-label">Role</label>
-                            <select class="form-control" id="id_role" name="id_role" required>
-                                <option value="1">Admin</option>
-                                <option value="2">User</option>
-                            </select>
+                            <input type="text" class="form-control" id="role_label" value="User" readonly>
+                            <input type="hidden" id="id_role" name="id_role" value="2">
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>

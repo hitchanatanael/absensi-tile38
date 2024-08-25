@@ -33,13 +33,6 @@ class DosenController extends Controller
         } else {
             return redirect()->route('data.dosen')->with('error', 'Gagal menambahkan data');
         }
-
-        // try {
-        //     Dosen::create($request->all());
-        //     return redirect()->route('data.dosen')->with('success', 'Data berhasil ditambahkan');
-        // } catch (\Throwable $th) {
-        //     return redirect()->route('data.dosen')->with('error', 'Gagal menambahkan data');
-        // }
     }
 
     public function update(Request $request, $id)

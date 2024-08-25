@@ -3,7 +3,7 @@
     use Carbon\Carbon;
 @endphp
 @section('content')
-    <div class="container">
+    <div>
         <div class="row justify-content-center">
             <div class="col-sm-12 col-md-12 col-lg-12 blue-box">
                 <div class="text-center py-2">

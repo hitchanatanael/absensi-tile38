@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AbsenDosenController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
@@ -8,6 +7,7 @@ use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\IzinController;
 use App\Http\Controllers\IzinDosenController;
 use App\Http\Controllers\KehadiranDosenController;
+use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -57,4 +57,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/izin', [IzinController::class, 'index'])->name('izin');
     Route::post('/izin', [IzinController::class, 'store'])->name('izin.store');
     Route::post('/izin/{id}', [IzinController::class, 'destroy'])->name('izin.destroy');
+});
+
+// User Profil
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profil/{id}', [ProfilController::class, 'index'])->name('profil');
+    Route::post('/profil/update/{id}', [ProfilController::class, 'updateProfil'])->name('profil.update');
 });

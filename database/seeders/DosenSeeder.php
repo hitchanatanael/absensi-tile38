@@ -13,13 +13,20 @@ class DosenSeeder extends Seeder
     {
         $faker = Faker::create('id_ID');
 
-        foreach (range(1, 20) as $index) {
+        foreach (range(1, 10) as $index) {
             DB::table('dosens')->insert([
-                'nama' => $faker->name,
-                'nik' => $faker->unique()->numerify('################'), // 16 digit NIK
-                'alamat' => $faker->address,
-                'no_hp' => $faker->phoneNumber,
+                'nama'    => $faker->name,
+                'nik'     => $faker->unique()->numerify('################'),
+                'alamat'  => $faker->address,
+                'no_hp'   => $faker->phoneNumber,
             ]);
         }
+
+        DB::table('dosens')->insert([
+            'nama'   => 'Hitcha Natanael',
+            'nik'    => '1402081204020001',
+            'alamat' => 'Jl. Bangau Sakti',
+            'no_hp'  => '082285774472',
+        ]);
     }
 }

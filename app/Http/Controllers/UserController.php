@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Dosen;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -14,7 +14,7 @@ class UserController extends Controller
         $data = [
             'title' => 'Akun User',
             'dosens' => Dosen::all(),
-            'users' => User::all(),
+            'users' => User::where('id_role', '!=', 1)->get(),
         ];
 
         return view('admin.users.index', $data);
@@ -26,7 +26,7 @@ class UserController extends Controller
             'id_role' => 'required|in:1,2',
             'nama' => 'required|exists:dosens,nama',
             'email' => 'required|email:dns',
-            'password' => 'required',
+            'password' => 'required|min:8',
         ]);
 
         $user = new User();
@@ -48,17 +48,12 @@ class UserController extends Controller
             'id_role' => 'required|in:1,2',
             'nama' => 'required|exists:dosens,nama',
             'email' => 'required|email:dns',
-            'password' => 'nullable',
         ]);
 
         $user = User::findOrFail($id);
         $user->id_role = $request->id_role;
         $user->nama = $request->nama;
         $user->email = $request->email;
-
-        if ($user->filled('password')) {
-            $user->password = Hash::make($request->password);
-        }
 
         if ($user->update()) {
             return redirect()->route('akun.user')->with('success', 'Data berhasil diupdate');

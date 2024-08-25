@@ -28,4 +28,16 @@ class User extends AuthenticatableUser implements AuthenticatableContract
     {
         return $this->hasMany(User::class, 'id_user');
     }
+
+    public function scopeNamaDosen($query)
+    {
+        return $query->join('dosens', 'users.id', '=', 'dosens.id_user')
+            ->select('dosens', 'dosens.nama')
+            ->get();
+    }
+
+    public function getRoleNameAttribute()
+    {
+        return $this->id_role == 2 ? 'User' : 'Admin';
+    }
 }
