@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Dosen;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,46 +23,49 @@ class ProfilController extends Controller
 
     public function updateProfil(Request $request, $id)
     {
-        // Validasi input dari user
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $id,
-            'password' => 'nullable|string|min:8|confirmed',
-            'foto_user' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        try {
+            $user = User::findOrFail($id);
 
-        // Mengambil data user berdasarkan ID
-        $user = User::findOrFail($id);
+            $request->validate([
+                'nama'      => 'nullable|string|max:255',
+                'email'     => 'nullable|email:dns|max:255|unique:users,email,' . $id,
+                'password'  => 'nullable|string|min:8',
+                'foto_user' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
 
-        // Update nama dan email
-        $user->nama = $request->input('nama');
-        $user->email = $request->input('email');
+            $updateData = [];
 
-        // Update password jika diisi
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->input('password'));
-        }
-
-        // Update foto profil jika ada file baru
-        if ($request->hasFile('foto_user')) {
-            // Hapus foto lama jika ada
-            if ($user->foto_user && $user->foto_user != 'user-1.jpg') {
-                Storage::delete('public/assets/images/profile/' . $user->foto_user);
+            if ($request->filled('nama')) {
+                $updateData['nama'] = $request->input('nama');
             }
 
-            // Simpan foto baru
-            $file = $request->file('foto_user');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/'), $filename);
+            if ($request->filled('email')) {
+                $updateData['email'] = $request->input('email');
+            }
 
-            // Simpan nama file foto ke dalam database
-            $user->foto_user = $filename;
+            if ($request->filled('password')) {
+                $updateData['password'] = Hash::make($request->input('password'));
+            }
+
+            if ($request->hasFile('foto_user')) {
+                if ($user->foto_user && $user->foto_user != 'user-1.jpg') {
+                    Storage::delete('uploads/' . $user->foto_user);
+                }
+                $file = $request->file('foto_user');
+                $filename = 'profile_picture' . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/'), $filename);
+                $updateData['foto_user'] = $filename;
+            }
+
+            if (!empty($updateData)) {
+                $user->update($updateData);
+            }
+
+            return redirect()->route('profil', ['id' => $user->id])->with('success', 'Profil berhasil diubah.');
+        } catch (\Exception $e) {
+            Log::error('Gagal mengubah profil: ' . $e->getMessage());
+
+            return redirect()->route('profil', ['id' => $user->id])->with('error', 'Gagal mengubah profil.');
         }
-
-        // Simpan perubahan ke database
-        $user->save();
-
-        // Redirect kembali ke halaman profil dengan pesan sukses
-        return redirect()->route('profil')->with('success', 'Profil berhasil diubah.');
     }
 }

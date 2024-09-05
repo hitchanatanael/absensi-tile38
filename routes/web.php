@@ -62,5 +62,14 @@ Route::middleware(['auth'])->group(function () {
 // User Profil
 Route::middleware(['auth'])->group(function () {
     Route::get('/profil/{id}', [ProfilController::class, 'index'])->name('profil');
-    Route::post('/profil/update/{id}', [ProfilController::class, 'updateProfil'])->name('profil.update');
+    Route::put('/profil/update/{id}', [ProfilController::class, 'updateProfil'])->name('profil.update');
+});
+
+// Data Koordinat
+Route::get('geojson/unri', function () {
+    $path = storage_path('app/geojson/unri.geojson');
+    if (!file_exists($path)) {
+        abort(404, 'File not found');
+    }
+    return response()->file($path);
 });

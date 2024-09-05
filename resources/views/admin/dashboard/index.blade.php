@@ -64,27 +64,31 @@
 
 
     <script>
-        var mapAttend = L.map('mapAttend').setView([0.4778934185410452, 101.37961044457528], 19);
+        var mapAttend = L.map('mapAttend').setView([0.4732347824651372, 101.37993796526224], 14.5);
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 30,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(mapAttend);
 
-        var polygon = L.polygon([
-            [0.4780762218230241, 101.37931691924238],
-            [0.47810196876374406, 101.37953320106662],
-            [0.4781032561107826, 101.37971343592015],
-            [0.4780273026353688, 101.37986534815384],
-            [0.4780273026353688, 101.37986534815384],
-            [0.47771447729551286, 101.37996576471511],
-            [0.4776565466754453, 101.37996705210692],
-            [0.47756900707088334, 101.37991813121809],
-            [0.4775303866567629, 101.3796374798033],
-            [0.47770675321286177, 101.37932721837686],
-            [0.47787797037613744, 101.37930404532428],
-            [0.4780762218230241, 101.37931691924238]
-        ]).addTo(mapAttend);
+        fetch('/geojson/unri')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text(); // Mengambil respons sebagai teks untuk debugging
+            })
+            .then(text => {
+                console.log(text); // Lihat isi teks dari respons
+                try {
+                    const data = JSON.parse(text); // Parsing manual JSON
+                    var geojsonLayer = L.geoJSON(data).addTo(mapAttend);
+                    geojsonLayer.bindPopup("Lokasi Absen");
+                } catch (e) {
+                    console.error('Error parsing JSON:', e);
+                }
+            })
+            .catch(error => console.error('Error loading GeoJSON:', error));
 
         polygon.bindPopup("Lokasi Absen");
     </script>

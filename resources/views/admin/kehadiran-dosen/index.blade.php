@@ -5,7 +5,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="pagetitle pb-2 headnav">
-            <h2>Absen Dosen</h2>
+            <h2>Kehadiran Dosen</h2>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
@@ -69,7 +69,8 @@
                                         </td>
 
                                         <td class="text-center" style="width: 120px; font-size: 14px">
-                                            <form action="{{ route('absensi.dosen.destroy', $absen->id) }}" method="POST">
+                                            <form action="{{ route('kehadiran.dosen.destroy', $absen->id) }}"
+                                                method="POST">
                                                 @csrf
                                                 @method('POST')
                                                 <button type="submit" class="btn btn-danger">

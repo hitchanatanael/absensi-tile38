@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title }}</title>
     <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/logos/favicon.png') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/styles.min.css') }}" />
@@ -24,8 +25,11 @@
         <aside class="left-sidebar">
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a href="./index.html" class="text-nowrap logo-img">
-                        <img src="{{ asset('assets/images/logos/dark-logo.svg') }}" width="180" alt="" />
+                    <a href="./index.html" class="text-nowrap logo-text">
+                        <!-- Ganti elemen img dengan span -->
+                        <img src="{{ asset('assets/images/unri.png') }}" alt="Logo" width="50px">
+                        <span class="geo-presensi"
+                            style="font-size: 20px; font-weight: bold; color: #333; position: relative; top: 5px;">GeoPresensi</span>
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
@@ -140,7 +144,7 @@
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     <img src="{{ asset('uploads/' . Auth::user()->foto_user) }}" alt="Profile"
                                         width="35" height="35" class="rounded-circle"
-                                        onerror="this.onerror=null; this.src='{{ asset('../assets/images/profile/user-1.jpg') }}';">
+                                        onerror="this.onerror=null; this.src='{{ asset('../uploads/user-1.jpg') }}';">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
                                     aria-labelledby="drop2">
@@ -230,6 +234,16 @@
                 showConfirmButton: false,
                 timer: 1500
             });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ session('error') }}'
+            })
         </script>
     @endif
 </body>

@@ -21,7 +21,7 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-sm-11 col-md-11 col-lg-11 white-box">
-                <div class="card overflow-hidden ">
+                <div class="card overflow-hidden">
                     <div class="card-body p-4">
                         <div class="row pt-4 mb-4">
                             <div class="col">
@@ -33,7 +33,7 @@
                                 <input type="text" class="form-control" id="endTime" value="17:00" readonly>
                             </div>
                         </div>
-                        @if ($absensiHariIni->isNotEmpty() && $absensiHariIni->first()->status == 1)
+                        @if ($absensiHariIni->where('status', 1)->isNotEmpty())
                             <form action="{{ route('absensi.clock-out') }}" method="POST" id="absensiForm">
                                 @csrf
                                 <input type="hidden" name="latitude" id="latitude">
@@ -65,21 +65,17 @@
                                 @foreach ($absensiHariIni as $absensi)
                                     <tr>
                                         <td>
-                                            <span class="fw-bold" style="width: 600px">
-                                                {{ Carbon::parse($absensi->tgl_absen)->translatedFormat('l, d M Y') }}
-                                            </span>
-                                        </td>
-
-                                        <td>
-                                            <span class="fw-bold {{ $absensi->is_late == 1 ? 'text-danger' : '' }}"
-                                                style="width: 200px">
+                                            <p class="fw-bold">
+                                                {{ Carbon::parse($absensi->tgl_absen)->translatedFormat('l, d F Y') }}
+                                            </p>
+                                            <span class="fw-bold {{ $absensi->is_late == 1 ? 'text-danger' : '' }}">
                                                 <i class="fa-solid fa-clock me-1"></i>
                                                 {{ $absensi->jam_masuk ? Carbon::parse($absensi->jam_masuk)->format('H:i') : '' }}
                                             </span>
-                                        </td>
 
-                                        <td>
-                                            <span class="fw-bold" style="width: 200px">
+                                            -
+
+                                            <span class="fw-bold">
                                                 @if ($absensi->jam_keluar)
                                                     <i class="fa-solid fa-clock me-1"></i>
                                                     {{ Carbon::parse($absensi->jam_keluar)->format('H:i') }}
@@ -96,57 +92,105 @@
         </div>
     </div>
 
+    <!-- Include JavaScript libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
-        // Get current location
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition, showError);
-            } else {
-                alert("Geolocation is not supported by this browser.");
+        $(document).ready(function() {
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        $('#latitude').val(position.coords.latitude);
+                        $('#longitude').val(position.coords.longitude);
+                    }, showError, {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    });
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
             }
-        }
 
-        function showPosition(position) {
-            document.getElementById('latitude').value = position.coords.latitude;
-            document.getElementById('longitude').value = position.coords.longitude;
-        }
-
-        function showError(error) {
-            switch (error.code) {
-                case error.PERMISSION_DENIED:
-                    alert("User denied the request for Geolocation.");
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    alert("Location information is unavailable.");
-                    break;
-                case error.TIMEOUT:
-                    alert("The request to get user location timed out.");
-                    break;
-                case error.UNKNOWN_ERROR:
-                    alert("An unknown error occurred.");
-                    break;
+            function showError(error) {
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        alert("Anda menolak permintaan Geolokasi.");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        alert("Informasi lokasi tidak tersedia.");
+                        break;
+                    case error.TIMEOUT:
+                        alert("Permintaan untuk mendapatkan lokasi Anda telah habis waktunya.");
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        alert("Terjadi kesalahan yang tidak diketahui.");
+                        break;
+                }
             }
-        }
 
-        // Call getLocation on page load
-        window.onload = getLocation;
-        // Show SweetAlert based on session messages
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: '{{ session('success') }}',
-                });
-            @endif
+            $('#absensiForm').submit(function(event) {
+                event.preventDefault();
 
-            @if (session('error'))
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: '{{ session('error') }}',
-                });
-            @endif
+                getLocation();
+
+                setTimeout(function() {
+                    $.ajax({
+                        url: '{{ $absensiHariIni->where('status', 1)->isNotEmpty() ? route('absensi.clock-out') : route('absensi.clock-in') }}',
+                        type: 'POST',
+                        data: {
+                            latitude: $('#latitude').val(),
+                            longitude: $('#longitude').val(),
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: response.message
+                                }).then(function() {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: response.message
+                                });
+                            }
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Terjadi kesalahan pada server.'
+                            });
+                        }
+                    });
+                }, 1000);
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                @if (session('success'))
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: '{{ session('success') }}'
+                    });
+                @endif
+
+                @if (session('error'))
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '{{ session('error') }}'
+                    });
+                @endif
+            });
+
+            getLocation();
         });
     </script>
 @endsection

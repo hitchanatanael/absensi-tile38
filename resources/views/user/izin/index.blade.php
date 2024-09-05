@@ -21,55 +21,64 @@
                             class="ti ti-plus me-2"></i>Buat Pengajuan</a>
                 </div>
 
-                <div class="card">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
+                @forelse($izins as $izin)
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table">
+
                                 <tr>
-                                    <th class="text-center">Jenis Izin</th>
-                                    <th class="text-center">Tanggal</th>
-                                    <th class="text-center">Jumlah Hari</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-center">Aksi</th>
+                                    <td class="fw-bold">Jenis Izin</td>
+                                    <td>{{ $izin->jenis_izin }}</td>
                                 </tr>
-                                @forelse($izins as $izin)
+                                <tr>
+                                    <td class="fw-bold">Tanggal</td>
+                                    <td>
+                                        {{ Carbon::parse($izin->mulai_izin)->translatedFormat('l, d M Y') }} -
+                                        {{ Carbon::parse($izin->selesai_izin)->translatedFormat('l, d M Y') }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Jumlah Hari</td>
+                                    <td>
+                                        {{ Carbon::parse($izin->mulai_izin)->diffInDays(Carbon::parse($izin->selesai_izin)) + 1 }}
+                                        hari
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Status</td>
+                                    <td>
+                                        @if ($izin->status == 0)
+                                            <span class="badge text-bg-warning">Pending</span>
+                                        @elseif ($izin->status == 1)
+                                            <span class="badge text-bg-secondary">Diterima</span>
+                                        @else
+                                            <span class="badge text-bg-danger">Ditolak</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @if ($izin->status == 0)
                                     <tr>
-                                        <td class="text-center">{{ $izin->jenis_izin }}</td>
-                                        <td class="text-center">
-                                            {{ Carbon::parse($izin->mulai_izin)->translatedFormat('l, d M Y') }} -
-                                            {{ Carbon::parse($izin->selesai_izin)->translatedFormat('l, d M Y') }}</td>
-                                        <td class="text-center">
-                                            {{ Carbon::parse($izin->mulai_izin)->diffInDays(Carbon::parse($izin->selesai_izin)) + 1 }}
-                                            hari
-                                        </td>
-                                        <td class="text-center">
-                                            @if ($izin->status == 0)
-                                                <span class="badge text-bg-warning">Pending</span>
-                                            @elseif ($izin->status == 1)
-                                                <span class="badge text-bg-secondary">Diterima</span>
-                                            @else
-                                                <span class="badge text-bg-danger">Ditolak</span>
-                                            @endif
-                                        </td>
-                                        <td class="text-center" style="width: 120px">
+                                        <th></th>
+                                        <td>
                                             <form action="{{ route('izin.destroy', $izin->id) }}" method="POST"
                                                 class="d-inline">
                                                 @csrf
                                                 @method('POST')
-                                                <button type="submit" class="btn btn-danger btn-sm"><i
-                                                        class="fa-solid fa-trash"></i></button>
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i class="fa-solid fa-trash me-2"></i>Hapus Pengajuan
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center">Tidak ada data.</td>
-                                    </tr>
-                                @endforelse
+                                @endif
                             </table>
                         </div>
                     </div>
-                </div>
+                @empty
+                    <tr>
+                        <td colspan="6" class="text-center">Tidak ada data.</td>
+                    </tr>
+                @endforelse
             </div>
         </div>
     </div>

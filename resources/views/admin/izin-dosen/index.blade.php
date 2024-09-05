@@ -5,7 +5,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="pagetitle pb-2 headnav">
-            <h2>Absen Dosen</h2>
+            <h2>Izin Dosen</h2>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
