@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,9 +19,17 @@ class AuthController extends Controller
         $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
+            'remember' => 'sometimes|boolean'
+        ], [
+            'email.required'    => 'Email wajib diisi',
+            'email.email'       => 'Email harus diisi dengan alamat email yang valid',
+            'password.required' => 'Password wajib diisi',
         ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        $credentials = $request->only('email', 'password');
+        $remember = $request->has('remember');
+
+        if (Auth::attempt($credentials, $remember)) {
             $user = Auth::user();
 
             if ($user->id_role == 1) {
@@ -32,7 +39,7 @@ class AuthController extends Controller
             }
         }
 
-        return back()->with('error', 'The credentials provided do not match our records!');
+        return back()->with('error', ' Kredensial yang Anda berikan tidak cocok dengan catatan kami!');
     }
 
     public function logout(Request $request)

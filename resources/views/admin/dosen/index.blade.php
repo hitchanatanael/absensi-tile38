@@ -26,7 +26,7 @@
                                 <tr>
                                     <th class="text-center" style="width: 10px;">No.</th>
                                     <th class="text-center">Nama</th>
-                                    <th class="text-center">NIK</th>
+                                    <th class="text-center">NIP</th>
                                     <th class="text-center">Alamat</th>
                                     <th class="text-center">No. Hp</th>
                                     <th class="text-center">Aksi</th>
@@ -35,7 +35,7 @@
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}.</td>
                                         <td>{{ $dosen->nama }}</td>
-                                        <td>{{ $dosen->nik }}</td>
+                                        <td>{{ $dosen->nip }}</td>
                                         <td>{{ $dosen->alamat }}</td>
                                         <td>{{ $dosen->no_hp }}</td>
                                         <td class="text-center" style="width: 120px">

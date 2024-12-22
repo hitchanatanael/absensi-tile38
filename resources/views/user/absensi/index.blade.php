@@ -3,7 +3,7 @@
     use Carbon\Carbon;
 @endphp
 @section('content')
-    <div>
+    <div class="container">
         <div class="row justify-content-center">
             <div class="col-sm-12 col-md-12 col-lg-12 blue-box">
                 <div class="text-center py-2">
@@ -33,20 +33,26 @@
                                 <input type="text" class="form-control" id="endTime" value="17:00" readonly>
                             </div>
                         </div>
-                        @if ($absensiHariIni->where('status', 1)->isNotEmpty())
-                            <form action="{{ route('absensi.clock-out') }}" method="POST" id="absensiForm">
-                                @csrf
-                                <input type="hidden" name="latitude" id="latitude">
-                                <input type="hidden" name="longitude" id="longitude">
-                                <button type="submit" class="btn btn-danger w-100 mb-4">Clock Out</button>
-                            </form>
+                        @if ($sedangIzin)
+                            <div class="alert alert-warning text-center mb-4">
+                                Anda sedang dalam masa izin. Tidak dapat melakukan absensi.
+                            </div>
                         @else
-                            <form action="{{ route('absensi.clock-in') }}" method="POST" id="absensiForm">
-                                @csrf
-                                <input type="hidden" name="latitude" id="latitude">
-                                <input type="hidden" name="longitude" id="longitude">
-                                <button type="submit" class="btn btn-primary w-100 mb-4">Clock In</button>
-                            </form>
+                            @if ($absensiHariIni->where('status', 1)->isNotEmpty())
+                                <form action="{{ route('absensi.clock-out') }}" method="POST" id="absensiForm">
+                                    @csrf
+                                    <input type="hidden" name="latitude" id="latitude">
+                                    <input type="hidden" name="longitude" id="longitude">
+                                    <button type="submit" class="btn btn-danger w-100 mb-4">Clock Out</button>
+                                </form>
+                            @else
+                                <form action="{{ route('absensi.clock-in') }}" method="POST" id="absensiForm">
+                                    @csrf
+                                    <input type="hidden" name="latitude" id="latitude">
+                                    <input type="hidden" name="longitude" id="longitude">
+                                    <button type="submit" class="btn btn-primary w-100 mb-4">Clock In</button>
+                                </form>
+                            @endif
                         @endif
                     </div>
                 </div>

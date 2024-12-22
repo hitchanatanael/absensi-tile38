@@ -25,12 +25,14 @@
                             <table class="table table-bordered">
                                 <tr>
                                     <th class="text-center">Email</th>
+                                    <th class="text-center">NIP</th>
                                     <th class="text-center">Role</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                                 @forelse($users as $user)
                                     <tr>
                                         <td class="text-center">{{ $user->email }}</td>
+                                        <td class="text-center">{{ $user->nip }}</td>
                                         <td class="text-center">
                                             <span class="badge text-bg-info">{{ $user->role_name }}</span>
                                         </td>
@@ -143,6 +145,10 @@
                             </select>
                         </div>
                         <div class="mb-3">
+                            <label for="nip" class="form-label">NIP</label>
+                            <input type="text" class="form-control" id="nip" name="nip" readonly>
+                        </div>
+                        <div class="mb-3">
                             <label for="id_role" class="form-label">Role</label>
                             <input type="text" class="form-control" id="role_label" value="User" readonly>
                             <input type="hidden" id="id_role" name="id_role" value="2">
@@ -164,4 +170,37 @@
             </div>
         </div>
     </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Ketika dropdown nama berubah
+            $('#nama').change(function() {
+                var nama = $(this).val(); // Ambil nilai nama yang dipilih
+
+                if (nama) {
+                    // Lakukan AJAX untuk mendapatkan NIP berdasarkan nama yang dipilih
+                    $.ajax({
+                        url: '/get-nip/' + nama,
+                        type: 'GET',
+                        success: function(response) {
+                            if (response.nip) {
+                                // Isi input nip dengan nilai yang didapat dari server
+                                $('#nip').val(response.nip);
+                            } else {
+                                $('#nip').val(
+                                    ''); // Kosongkan jika tidak ada NIP yang ditemukan
+                            }
+                        },
+                        error: function() {
+                            alert("Terjadi kesalahan dalam pengambilan NIP.");
+                        }
+                    });
+                } else {
+                    $('#nip').val(''); // Kosongkan input NIP jika tidak ada nama yang dipilih
+                }
+            });
+        });
+    </script>
 @endsection

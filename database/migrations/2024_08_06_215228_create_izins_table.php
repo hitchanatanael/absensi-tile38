@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('izins', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_user');
+            $table->date('tgl_kirim');
             $table->enum('jenis_izin', [0, 1, 2])->default(0);
             $table->date('mulai_izin');
             $table->date('selesai_izin');

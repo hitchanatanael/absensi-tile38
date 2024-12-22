@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('dosens', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('nik')->unique();
+            $table->string('nip')->unique();
             $table->string('alamat')->nullable();
             $table->string('no_hp')->nullable();
             $table->timestamps();

@@ -117,6 +117,26 @@
                                     <span class="hide-menu">Izin</span>
                                 </a>
                             </li>
+
+                            <li class="sidebar-item">
+                                <a class="sidebar-link {{ Request::routeIs('history') ? 'active' : '' }}"
+                                    href="{{ route('history') }}" aria-expanded="false">
+                                    <span>
+                                        <i class="fa-solid fa-clock-rotate-left"></i>
+                                    </span>
+                                    <span class="hide-menu">History</span>
+                                </a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a class="sidebar-link {{ Request::routeIs('profil') ? 'active' : '' }}"
+                                    href="{{ route('profil', ['id' => auth()->user()->id]) }}" aria-expanded="false">
+                                    <span>
+                                        <i class="ti ti-user fs-6"></i>
+                                    </span>
+                                    <span class="hide-menu">Profil</span>
+                                </a>
+                            </li>
                         @endif
                     </ul>
                 </nav>
@@ -127,16 +147,6 @@
             <header
                 class="app-header {{ Auth::user()->id_role == 1 ? '' : (Request::routeIs('home') ? 'navmenu' : '') }}">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link nav-icon-hover" href="#">
-                                <i
-                                    class="fa-solid fa-bell {{ Auth::user()->id_role == 1 ? '' : (Request::routeIs('home') ? 'bell-user' : '') }}"></i>
-                                <div class="notification rounded-circle"></div>
-                            </a>
-                        </li>
-                    </ul>
-
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="d-flex align-items-center justify-content-end">
                             <li class="nav-item dropdown">
@@ -149,14 +159,6 @@
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
                                     aria-labelledby="drop2">
                                     <div class="message-body">
-                                        @if (Auth::user()->id_role == 2)
-                                            <a href="{{ route('profil', ['id' => auth()->user()->id]) }}"
-                                                class="d-flex align-items-center gap-2 dropdown-item">
-                                                <i class="ti ti-user fs-6"></i>
-                                                <p class="mb-0 fs-3">My Profile</p>
-                                            </a>
-                                        @endif
-
                                         <form action="{{ route('logout') }}" method="POST"
                                             class="d-flex justify-content-center align-items-center">
                                             @csrf
@@ -210,8 +212,17 @@
                         <i class="fa fa-home"></i><br>Home
                     </a>
 
+                    <a href="{{ route('history') }}" class="{{ Request::routeIs('history') ? 'active' : '' }}">
+                        <i class="fa-solid fa-clock-rotate-left"></i><br>History
+                    </a>
+
                     <a href="{{ route('izin') }}" class="{{ Request::routeIs('izin') ? 'active' : '' }}">
                         <i class="fa-solid fa-envelope-open-text"></i><br>Izin
+                    </a>
+
+                    <a href="{{ route('profil', ['id' => auth()->user()->id]) }}"
+                        class="{{ Request::routeIs('profil') ? 'active' : '' }}">
+                        <i class="ti ti-user fs-6"></i><br>Profil
                     </a>
                 @endif
             </nav>

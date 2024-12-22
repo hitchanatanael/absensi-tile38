@@ -25,6 +25,7 @@
                                     <th class="text-center" style="font-size: 14px">Jenis Izin</th>
                                     <th class="text-center" style="font-size: 14px">Tanggal</th>
                                     <th class="text-center" style="font-size: 14px">Jumlah Hari</th>
+                                    <th class="text-center" style="font-size: 14px">Keterangan</th>
                                     <th class="text-center" style="font-size: 14px">Aksi</th>
                                 </tr>
                             </thead>
@@ -39,6 +40,9 @@
                                     <td class="text-center">
                                         {{ \Carbon\Carbon::parse($izin->mulai_izin)->diffInDays(\Carbon\Carbon::parse($izin->selesai_izin)) + 1 }}
                                         hari
+                                    </td>
+                                    <td class="text-center">
+                                        {{ $izin->keterangan }}
                                     </td>
                                     <td class="text-center">
                                         <div class="d-grid gap-2 d-md-block">

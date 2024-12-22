@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Absensi;
-use Illuminate\Http\Request;
 
 class KehadiranDosenController extends Controller
 {
     public function index()
     {
         $data = [
-            'title' => 'Absensi Dosen',
+            'title'    => 'Absensi Dosen',
             'absensis' => Absensi::with('users')->get(),
         ];
 

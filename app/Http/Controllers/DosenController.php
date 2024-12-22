@@ -21,7 +21,7 @@ class DosenController extends Controller
     {
         $request->validate([
             'nama'   => 'required',
-            'nik'    => 'required|unique:dosens,nik',
+            'nip'    => 'required|unique:dosens,nip',
             'alamat' => 'nullable',
             'no_hp'  => 'nullable',
         ]);
@@ -39,7 +39,7 @@ class DosenController extends Controller
     {
         $request->validate([
             'nama'   => 'required',
-            'nik'    => 'required|unique:dosens,nik,' . $id,
+            'nip'    => 'required|unique:dosens,nip,' . $id,
             'alamat' => 'nullable',
             'no_hp'  => 'nullable',
         ]);

@@ -24,6 +24,11 @@ class User extends AuthenticatableUser implements AuthenticatableContract
         return $this->hasMany(User::class, 'id_user');
     }
 
+    public function dosen()
+    {
+        return $this->belongsTo(Dosen::class, 'nip', 'nip');
+    }
+
     public function izin()
     {
         return $this->hasMany(User::class, 'id_user');

@@ -4,6 +4,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\IzinController;
 use App\Http\Controllers\IzinDosenController;
 use App\Http\Controllers\KehadiranDosenController;
@@ -33,7 +35,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/izin/dosen/tolak/{id}', [IzinDosenController::class, 'tolak'])->name('izin.tolak');
 });
 
-//Admin Data Dosen
+// Ajax getNip
+Route::get('/get-nip/{nama}', [AjaxController::class, 'getNip']);
+
+// Admin Data Dosen
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/data/dosen', [DosenController::class, 'index'])->name('data.dosen');
     Route::post('/data/dosen/store', [DosenController::class, 'store'])->name('data.dosen.store');
@@ -57,12 +62,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/izin', [IzinController::class, 'index'])->name('izin');
     Route::post('/izin', [IzinController::class, 'store'])->name('izin.store');
     Route::post('/izin/{id}', [IzinController::class, 'destroy'])->name('izin.destroy');
-});
-
-// User Profil
-Route::middleware(['auth'])->group(function () {
     Route::get('/profil/{id}', [ProfilController::class, 'index'])->name('profil');
     Route::put('/profil/update/{id}', [ProfilController::class, 'updateProfil'])->name('profil.update');
+    Route::put('/profil/password/{id}', [ProfilController::class, 'ubahPassword'])->name('profil.ubahPassword');
+    Route::get('/history', [HistoryController::class, 'index'])->name('history');
 });
 
 // Data Koordinat
@@ -72,4 +75,12 @@ Route::get('geojson/unri', function () {
         abort(404, 'File not found');
     }
     return response()->file($path);
+});
+
+Route::get('testing', function () {
+    $data = [
+        'title' => 'Testing'
+    ];
+
+    return view('user/profil/test', $data);
 });

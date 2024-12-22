@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Izin;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class IzinDosenController extends Controller
@@ -23,8 +21,6 @@ class IzinDosenController extends Controller
 
     public function setuju($id)
     {
-        // dd($id);
-        // Log::info('Mencoba update izin', ['id' => $id]);
         try {
             Izin::where('id', $id)->update([
                 'status' => 1,

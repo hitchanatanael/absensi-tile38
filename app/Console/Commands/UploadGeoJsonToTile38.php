@@ -27,7 +27,7 @@ class UploadGeoJsonToTile38 extends Command
 
     public function handle()
     {
-        $filePath = storage_path('app/geojson/rumah2.geojson');
+        $filePath = storage_path('app/geojson/unri.geojson');
 
         if (!file_exists($filePath)) {
             $this->error("GeoJSON file not found at $filePath");

@@ -26,6 +26,7 @@ class IzinController extends Controller
         try {
             Izin::create([
                 'id_user'      => $user->id,
+                'tgl_kirim'    => now()->toDateString(),
                 'jenis_izin'   => $request->input('jenis_izin'),
                 'mulai_izin'   => $request->input('mulai_izin'),
                 'selesai_izin' => $request->input('selesai_izin'),

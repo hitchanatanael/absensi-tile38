@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_role');
             $table->string('nama');
+            $table->string('nip')->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->string('foto_user')->nullable();

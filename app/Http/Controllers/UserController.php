@@ -5,16 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Dosen;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
     public function index()
     {
         $data = [
-            'title' => 'Akun User',
+            'title'  => 'Akun User',
             'dosens' => Dosen::all(),
-            'users' => User::where('id_role', '!=', 1)->get(),
+            'users'  => User::where('id_role', '!=', 1)->get(),
         ];
 
         return view('admin.users.index', $data);
@@ -23,15 +22,17 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_role' => 'required|in:1,2',
-            'nama' => 'required|exists:dosens,nama',
-            'email' => 'required|email:dns',
+            'id_role'  => 'required|in:1,2',
+            'nama'     => 'required|exists:dosens,nama',
+            'nip'      => 'required|exists:dosens,nip',
+            'email'    => 'required|email:dns',
             'password' => 'required|min:8',
         ]);
 
         $user = new User();
         $user->id_role = $request->id_role;
         $user->nama = $request->nama;
+        $user->nip = $request->nip;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
 
@@ -46,8 +47,8 @@ class UserController extends Controller
     {
         $request->validate([
             'id_role' => 'required|in:1,2',
-            'nama' => 'required|exists:dosens,nama',
-            'email' => 'required|email:dns',
+            'nama'    => 'required|exists:dosens,nama',
+            'email'   => 'required|email:dns',
         ]);
 
         $user = User::findOrFail($id);

@@ -101,7 +101,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="jenis_izin" class="form-label">Jenis Sakit</label>
-                            <select name="jenis_izin" class="form-select" aria-label="Default select example">
+                            <select name="jenis_izin" class="form-select" aria-label="Default select example" required>
                                 <option selected>Pilih</option>
                                 <option value="1">Izin</option>
                                 <option value="2">Sakit</option>
@@ -109,11 +109,11 @@
                         </div>
                         <div class="mb-3">
                             <label for="mulai_izin" class="form-label">Mulai Izin</label>
-                            <input type="date" class="form-control" id="mulai_izin" name="mulai_izin">
+                            <input type="date" class="form-control" id="mulai_izin" name="mulai_izin" required>
                         </div>
                         <div class="mb-3">
                             <label for="selesai_izin" class="form-label">Selesai Izin</label>
-                            <input type="date" class="form-control" id="selesai_izin" name="selesai_izin">
+                            <input type="date" class="form-control" id="selesai_izin" name="selesai_izin" required>
                         </div>
                         <div class="mb-3">
                             <label for="keterangan" class="form-label">Keterangan</label>
